@@ -47,7 +47,7 @@ class DKT(Module):
         return y
 
     def train_model(
-        self, train_loader, test_loader, num_epochs, opt, ckpt_path
+        self, train_loader, test_loader, num_epochs, opt, ckpt_path, device
     ):
         '''
             Args:
@@ -67,6 +67,7 @@ class DKT(Module):
 
             for data in train_loader:
                 q, r, qshft, rshft, m = data
+                q, r, qshft, rshft, m = q.to(device), r.to(device), qshft.to(device), rshft.to(device), m.to(device)
 
                 self.train()
 
@@ -86,6 +87,7 @@ class DKT(Module):
             with torch.no_grad():
                 for data in test_loader:
                     q, r, qshft, rshft, m = data
+                    q, r, qshft, rshft, m = q.to(device), r.to(device), qshft.to(device), rshft.to(device), m.to(device)
 
                     self.eval()
 
@@ -99,23 +101,25 @@ class DKT(Module):
                         y_true=t.numpy(), y_score=y.numpy()
                     )
 
-                    loss_mean = np.mean(loss_mean)
+                    loss_mean_val = np.mean(loss_mean)
 
                     print(
-                        "Epoch: {},   AUC: {},   Loss Mean: {}"
-                        .format(i, auc, loss_mean)
+                        "Epoch: {},   AUC: {:.4f},   Loss Mean: {:.4f}"
+                        .format(i, auc, loss_mean_val)
                     )
 
                     if auc > max_auc:
                         torch.save(
                             self.state_dict(),
                             os.path.join(
-                                ckpt_path, "model.ckpt"
+                                ckpt_path, "dkt_best.pt"
                             )
                         )
                         max_auc = auc
 
                     aucs.append(auc)
-                    loss_means.append(loss_mean)
+                    loss_means.append(loss_mean_val)
+
+        return aucs, loss_means
 
         return aucs, loss_means

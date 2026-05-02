@@ -1,0 +1,30 @@
+name: "dkt"
+platform: "onnxruntime_onnx"
+max_batch_size: 128
+
+input [
+  {
+    name: "q"
+    data_type: TYPE_INT64
+    dims: [ 200 ]
+  },
+  {
+    name: "r"
+    data_type: TYPE_INT64
+    dims: [ 200 ]
+  }
+]
+
+output [
+  {
+    name: "output"
+    data_type: TYPE_FP32
+    dims: [ 200, 198 ]
+  }
+]
+
+instance_group [
+  {
+    kind: KIND_GPU
+  }
+]
