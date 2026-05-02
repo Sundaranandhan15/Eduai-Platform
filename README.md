@@ -42,6 +42,6 @@ Once the backend is running, the auto-generated OpenAPI documentation is availab
 ## Docker Pull
 You can also pull the pre-built images directly from DockerHub (replace with actual username once published):
 ```bash
-docker pull yourdockerhubusername/eduai-frontend:latest
-docker pull yourdockerhubusername/eduai-backend:latest
+docker pull sundaranandhan/eduai-frontend:latest
+docker pull sundaranandhan/eduai-backend:latest
 ```
